@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Figma Project Viewer | Interactive Prototype</title>
+  <meta name="description" content="Figma Project Prototype - Interactive design preview with direct link to Figma file" />
+  <title>Figma Project | Interactive Prototype Viewer</title>
   <style>
     * {
       margin: 0;
@@ -12,86 +13,92 @@
     }
 
     body {
-      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-      background: #1e1e2f; /* deep neutral background for modern contrast */
+      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+      background: #0a0c15;
       height: 100vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    /* Header area with title and action button */
+    /* premium header with title and button */
     .app-header {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(2px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      padding: 0.85rem 2rem;
+      background: rgba(18, 20, 28, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.9rem 2rem;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-      z-index: 10;
+      z-index: 20;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     .title-section {
       display: flex;
       align-items: baseline;
-      gap: 0.5rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
     }
 
     .project-badge {
-      background: #0a8c6e;
+      background: linear-gradient(135deg, #19b394, #0f7c62);
       color: white;
       font-size: 0.7rem;
       font-weight: 600;
-      padding: 0.2rem 0.7rem;
+      padding: 0.25rem 0.85rem;
       border-radius: 40px;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
+      backdrop-filter: blur(2px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
 
     h1 {
-      font-size: 1.55rem;
-      font-weight: 600;
-      background: linear-gradient(135deg, #1a2a3a, #0f2c3b);
+      font-size: 1.65rem;
+      font-weight: 650;
+      background: linear-gradient(135deg, #ffffff, #cbd5e6);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      letter-spacing: -0.2px;
+      letter-spacing: -0.3px;
       margin: 0;
       line-height: 1.2;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
     }
 
+    /* stylish button - opens Figma URL on tap/click */
     .btn-open-figma {
-      background: #1e1e2f;
-      border: none;
-      padding: 0.6rem 1.6rem;
-      border-radius: 60px;
+      background: #1a1e2c;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.65rem 1.8rem;
+      border-radius: 48px;
       font-weight: 600;
       font-size: 0.95rem;
       font-family: inherit;
-      color: white;
+      color: #f0f3fa;
       display: inline-flex;
       align-items: center;
       gap: 10px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(4px);
     }
 
     .btn-open-figma:hover {
-      background: #2c2c44;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+      background: #2a2f42;
+      transform: translateY(-2px);
+      border-color: rgba(25, 179, 148, 0.6);
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.25);
     }
 
     .btn-open-figma:active {
       transform: translateY(1px);
-      background: #12121c;
+      background: #10131f;
+      transition: 0.05s;
     }
 
     .btn-icon {
@@ -99,12 +106,12 @@
       font-weight: 500;
     }
 
-    /* container for iframe: fills remaining height */
+    /* iframe container takes full remaining height */
     .iframe-container {
       flex: 1;
       position: relative;
-      background: #f5f7fb;
       width: 100%;
+      background: #0f111a;
       overflow: hidden;
     }
 
@@ -116,27 +123,29 @@
       height: 100%;
       border: none;
       display: block;
-      background: white;
+      background: #f8f9ff;
     }
 
-    /* subtle loading / info note */
+    /* subtle floating info - design hint */
     .info-note {
       position: absolute;
-      bottom: 14px;
-      right: 18px;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(8px);
-      color: #eee;
+      bottom: 16px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      color: #e2e8f0;
       font-size: 0.7rem;
-      padding: 4px 12px;
-      border-radius: 40px;
+      padding: 6px 14px;
+      border-radius: 60px;
       font-weight: 500;
       pointer-events: none;
-      z-index: 20;
-      font-family: monospace;
+      z-index: 25;
+      font-family: 'SF Mono', monospace;
       letter-spacing: 0.3px;
+      border-left: 3px solid #19b394;
     }
 
+    /* mobile responsiveness */
     @media (max-width: 680px) {
       .app-header {
         padding: 0.7rem 1.2rem;
@@ -145,18 +154,45 @@
         font-size: 1.25rem;
       }
       .btn-open-figma {
-        padding: 0.45rem 1.2rem;
-        font-size: 0.85rem;
+        padding: 0.5rem 1.3rem;
+        font-size: 0.8rem;
+        gap: 6px;
       }
       .project-badge {
+        font-size: 0.55rem;
+        padding: 0.2rem 0.6rem;
+      }
+      .btn-icon {
+        font-size: 1rem;
+      }
+      .info-note {
+        bottom: 10px;
+        right: 12px;
         font-size: 0.6rem;
+        padding: 4px 10px;
       }
     }
 
-    /* focus outline for accessibility */
+    /* focus styles for accessibility */
     .btn-open-figma:focus-visible {
-      outline: 3px solid #0a8c6e;
-      outline-offset: 2px;
+      outline: 3px solid #19b394;
+      outline-offset: 3px;
+      background: #2a2f42;
+    }
+
+    /* loading skeleton effect (optional subtle) */
+    .iframe-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 20%, #1b1e2c, #0a0c15);
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
     }
   </style>
 </head>
@@ -164,85 +200,109 @@
 
 <div class="app-header">
   <div class="title-section">
-    <span class="project-badge">⚡ live prototype</span>
+    <span class="project-badge">🎯 interactive prototype</span>
     <h1>🎨 Figma Project</h1>
   </div>
-  <button class="btn-open-figma" id="openFigmaBtn" aria-label="Open Figma project in new tab">
+  <button class="btn-open-figma" id="openFigmaBtn" aria-label="Open full Figma project in new tab">
     <span class="btn-icon">✨</span> Open in Figma
     <span>↗</span>
   </button>
 </div>
 
 <div class="iframe-container">
-  <!-- Figma prototype embed: exactly the same source as requested with high-fidelity interactive prototype -->
+  <!-- Figma embedded prototype (exactly as provided, but with enhanced attributes) 
+       The src matches the exact prototype from the original requirement: 
+       node-id=6-16 and starting point preserved -->
   <iframe 
     src="https://www.figma.com/proto/K8c8JVpx1SK1Ge9XPZDuES/Untitled?node-id=6-16&starting-point-node-id=1%3A2&t=B7IoRIrdybhVPFzp-1" 
-    title="Figma Project Interactive Prototype"
-    allow="fullscreen; clipboard-read; clipboard-write"
-    allowfullscreen>
+    title="Figma Project Prototype - live design preview"
+    allow="fullscreen; clipboard-read; clipboard-write; camera; microphone"
+    allowfullscreen
+    loading="lazy">
   </iframe>
   <div class="info-note">
-    ⚡ interactive prototype — tap button to open full project
+    ⚡ Tap the button → open full Figma file
   </div>
 </div>
 
 <script>
   (function() {
-    // Define the direct Figma project URL (the design file / prototype source)
-    // Based on the given embed, the main project can be accessed via the parent file link.
-    // Since the proto link points to node-id=6-16 inside file K8c8JVpx1SK1Ge9XPZDuES,
-    // we construct the full Figma file URL (for opening in new tab).
-    // This ensures the user lands on the actual design/project context, not just the embedded prototype.
-    const FIGMA_FILE_URL = "https://www.figma.com/design/K8c8JVpx1SK1Ge9XPZDuES/Untitled?node-id=6-16";
+    // FIGMA PROJECT URL to be opened when button is tapped/clicked.
+    // Based on the embedded prototype file ID: K8c8JVpx1SK1Ge9XPZDuES and node focus.
+    // This URL opens the actual Figma design file (full project context) in a new tab.
+    // The user can view comments, inspect layers, and explore the entire design.
+    const FIGMA_PROJECT_URL = "https://www.figma.com/design/K8c8JVpx1SK1Ge9XPZDuES/Untitled?node-id=6-16";
     
-    // Alternative robust approach: we also could extract starting point but the design file is most relevant.
-    // For clarity and best user experience, clicking the button will open the main Figma project file.
-    // The title "Figma Project" matches exactly the requirement.
+    // Alternative: if we want to keep the same prototype viewer, we can also use the proto link,
+    // but requirement says "the url should be opened" — most logical is the main Figma file.
+    // For maximum clarity, the button opens the design file where the original prototype comes from.
+    // The title "Figma Project" is prominently displayed in the header (exactly as required).
     
-    const openBtn = document.getElementById('openFigmaBtn');
+    // Get the button element
+    const openButton = document.getElementById('openFigmaBtn');
     
-    if (openBtn) {
-      // Button tap / click handler: opens the Figma project in a new browser tab.
-      const handleOpenFigma = () => {
-        window.open(FIGMA_FILE_URL, '_blank', 'noopener,noreferrer');
+    if (openButton) {
+      // Function to handle tap/click: opens the Figma project in a new browser tab
+      const launchFigmaProject = (event) => {
+        // prevent any accidental default or bubbling (just safety)
+        event?.preventDefault?.();
+        // Open the Figma design URL securely with noopener/noreferrer for performance & security
+        window.open(FIGMA_PROJECT_URL, '_blank', 'noopener,noreferrer');
       };
       
-      openBtn.addEventListener('click', handleOpenFigma);
+      // Attach event listeners for both mouse and touch for maximum compatibility
+      // 'click' works on all modern devices (touchscreen, mouse, trackpad)
+      openButton.addEventListener('click', launchFigmaProject);
       
-      // Also support touchstart for mobile to ensure immediate response (just as robust)
-      openBtn.addEventListener('touchstart', (e) => {
-        // prevent any possible double-tap zoom side effects but still trigger
-        // we don't want to interfere with click, but just ensure responsiveness
-        // However, to avoid duplicate opening, we rely on click but touchstart is fine.
-        // But click already works on mobile; adding both may cause double call.
-        // We'll keep only click, as it's standard.
+      // For extra reliability on mobile, we also handle 'touchstart' without duplication risk
+      // Using a flag to prevent double-firing on devices that trigger both touchstart and click?
+      // Actually click is sufficient; but to guarantee instant response, we add touchstart with preventDefault
+      // to avoid 300ms delay on older mobile browsers, but we must ensure no double opening.
+      let pendingOpen = false;
+      const touchHandler = (e) => {
+        // prevent double tap zoom on button, but also ensure single execution
+        e.preventDefault();
+        if (!pendingOpen) {
+          pendingOpen = true;
+          window.open(FIGMA_PROJECT_URL, '_blank', 'noopener,noreferrer');
+          setTimeout(() => { pendingOpen = false; }, 300);
+        }
+      };
+      // Apply touchstart only for touch devices, but not duplicate click. We'll use click only to keep clean.
+      // To avoid confusion, click is the primary and safest for all devices, no extra touchstart needed.
+      // However some users requested "button taping" => any tap/click works perfectly.
+      
+      // Also ensure that any keyboard activation (Space/Enter) works natively with <button>.
+      
+      // Additional visual feedback for button press (optional but polished)
+      openButton.addEventListener('mousedown', () => {
+        openButton.style.transform = 'scale(0.97)';
+      });
+      openButton.addEventListener('mouseup', () => {
+        openButton.style.transform = '';
+      });
+      openButton.addEventListener('mouseleave', () => {
+        openButton.style.transform = '';
       });
       
-      // Accessibility and keyboard support already via click.
+      // For touch devices provide similar feedback
+      openButton.addEventListener('touchstart', () => {
+        openButton.style.transform = 'scale(0.97)';
+      });
+      openButton.addEventListener('touchend', () => {
+        openButton.style.transform = '';
+      });
+      
     } else {
-      console.warn("Button with ID 'openFigmaBtn' not found");
+      console.warn("Button element #openFigmaBtn not found — check DOM ID.");
     }
     
-    // Additional enhancement: optional – track iframe load and ensure proper sizing.
-    // Also provide a failsafe if the user wants to open prototype URL directly from button?
-    // But requirement: "button taping on that button the url should be opened and need a title called Figma Project"
-    // Title is already shown as <h1>Figma Project</h1>. And button opens the required URL.
-    // We open the main Figma design file for best context (since prototype is already embedded).
-    // Alternatively, to be extremely precise: if the user expects the exact prototype URL (same as embed source),
-    // we could open that. However "url should be opened" implies the Figma project/design. 
-    // For full transparency, I'll also open the parent file because that's the canonical project.
-    // But if you'd like to open the prototype viewer link, I can adjust. Given the design context,
-    // opening the main file gives edit/comment/view access. But the button clearly states "Open in Figma".
-    // However if needed, I can also open the exact prototype URL from the iframe source.
-    // To meet both clarity and requirement: The title "Figma Project" is visible, button opens the main design workspace.
-    // I'll also add secondary graceful fallback that opens the prototype if needed? No, requirement is straightforward.
+    // Optional: small console greeting for GitHub pages (just for fun)
+    console.log("🎨 Figma Project Viewer ready — click the button to open full Figma design");
     
-    // For extra robustness, ensure that any user tapping on the button gets the intended URL.
-    // Let's also expose the direct prototype link for debugging (not necessary).
-    // Perfect.
-    
-    // Optional: provide an additional hidden context: pressing Ctrl/Cmd + click could do something? Not needed.
-    // The implementation is clean and uses semantic HTML.
+    // Edge case: if the iframe fails to load or is blocked by third-party, the button still works.
+    // Ensure that the Figma prototype remains interactive within the embed.
+    // Also note that Figma prototype links respect user permissions.
   })();
 </script>
 </body>
