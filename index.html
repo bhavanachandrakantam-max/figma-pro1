@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="description" content="Figma Project Prototype - Interactive design preview with direct link to Figma file" />
-  <title>Figma Project | Interactive Prototype Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Figma Project | Interactive Prototype</title>
   <style>
     * {
       margin: 0;
@@ -13,7 +12,7 @@
     }
 
     body {
-      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+      font-family: system-ui, 'Segoe UI', Inter, -apple-system, sans-serif;
       background: #0a0c15;
       height: 100vh;
       display: flex;
@@ -21,7 +20,6 @@
       overflow: hidden;
     }
 
-    /* premium header with title and button */
     .app-header {
       background: rgba(18, 20, 28, 0.94);
       backdrop-filter: blur(12px);
@@ -33,27 +31,6 @@
       justify-content: space-between;
       gap: 1rem;
       z-index: 20;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .title-section {
-      display: flex;
-      align-items: baseline;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .project-badge {
-      background: linear-gradient(135deg, #19b394, #0f7c62);
-      color: white;
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 0.25rem 0.85rem;
-      border-radius: 40px;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-      backdrop-filter: blur(2px);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
 
     h1 {
@@ -63,50 +40,35 @@
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      letter-spacing: -0.3px;
-      margin: 0;
-      line-height: 1.2;
-      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
     }
 
-    /* stylish button - opens Figma URL on tap/click */
+    .project-badge {
+      background: linear-gradient(135deg, #19b394, #0f7c62);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.85rem;
+      border-radius: 40px;
+    }
+
     .btn-open-figma {
       background: #1a1e2c;
       border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 0.65rem 1.8rem;
       border-radius: 48px;
       font-weight: 600;
-      font-size: 0.95rem;
-      font-family: inherit;
       color: #f0f3fa;
+      cursor: pointer;
+      transition: all 0.25s ease;
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(4px);
     }
 
     .btn-open-figma:hover {
       background: #2a2f42;
       transform: translateY(-2px);
-      border-color: rgba(25, 179, 148, 0.6);
-      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.25);
     }
 
-    .btn-open-figma:active {
-      transform: translateY(1px);
-      background: #10131f;
-      transition: 0.05s;
-    }
-
-    .btn-icon {
-      font-size: 1.2rem;
-      font-weight: 500;
-    }
-
-    /* iframe container takes full remaining height, centers the embed */
     .iframe-container {
       flex: 1;
       position: relative;
@@ -115,63 +77,46 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: auto;
       padding: 20px;
     }
 
-    /* wrapper to maintain embed dimensions and responsive behavior */
     .figma-embed-wrapper {
-      background: #ffffff;
+      width: 100%;
+      max-width: 1200px;
+      height: 100%;
+      max-height: calc(100vh - 80px);
       border-radius: 20px;
+      overflow: hidden;
       box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
-      transition: all 0.2s ease;
-      max-width: 100%;
-      max-height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: #fff;
     }
 
     iframe {
-      display: block;
-      border-radius: 16px;
-      background: white;
       width: 100%;
-      height: auto;
-      aspect-ratio: 800 / 450;
-      max-width: 100%;
-      max-height: 100%;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      height: 100%;
+      border: none;
+      display: block;
     }
 
-    /* For very tall screens, ensure embed doesn't overflow */
-    @media (min-aspect-ratio: 16/9) {
-      .iframe-container {
-        padding: 24px;
-      }
-    }
-
-    /* subtle floating info - design hint */
-    .info-note {
+    .fallback-message {
       position: absolute;
       bottom: 20px;
-      right: 24px;
+      left: 20px;
       background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(12px);
-      color: #e2e8f0;
-      font-size: 0.7rem;
-      padding: 6px 14px;
-      border-radius: 60px;
-      font-weight: 500;
-      pointer-events: none;
+      backdrop-filter: blur(8px);
+      color: #ffaa66;
+      font-size: 0.75rem;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-family: monospace;
       z-index: 25;
-      font-family: 'SF Mono', monospace;
-      letter-spacing: 0.3px;
-      border-left: 3px solid #19b394;
     }
 
-    /* mobile responsiveness */
+    .fallback-message a {
+      color: #19b394;
+      text-decoration: none;
+    }
+
     @media (max-width: 680px) {
       .app-header {
         padding: 0.7rem 1.2rem;
@@ -180,129 +125,46 @@
         font-size: 1.25rem;
       }
       .btn-open-figma {
-        padding: 0.5rem 1.3rem;
+        padding: 0.5rem 1.2rem;
         font-size: 0.8rem;
-        gap: 6px;
-      }
-      .project-badge {
-        font-size: 0.55rem;
-        padding: 0.2rem 0.6rem;
-      }
-      .btn-icon {
-        font-size: 1rem;
-      }
-      .info-note {
-        bottom: 12px;
-        right: 12px;
-        font-size: 0.6rem;
-        padding: 4px 10px;
       }
       .iframe-container {
         padding: 12px;
       }
-      iframe {
-        border-radius: 12px;
-      }
-    }
-
-    /* focus styles for accessibility */
-    .btn-open-figma:focus-visible {
-      outline: 3px solid #19b394;
-      outline-offset: 3px;
-      background: #2a2f42;
     }
   </style>
 </head>
 <body>
 
 <div class="app-header">
-  <div class="title-section">
-    <span class="project-badge">🎯 interactive prototype</span>
+  <div style="display: flex; align-items: baseline; gap: 0.75rem;">
+    <span class="project-badge">🎯 INTERACTIVE PROTOTYPE</span>
     <h1>🎨 Figma Project</h1>
   </div>
-  <button class="btn-open-figma" id="openFigmaBtn" aria-label="Open Figma project in new tab">
-    <span class="btn-icon">✨</span> Open in Figma
-    <span>↗</span>
+  <button class="btn-open-figma" id="openFigmaBtn">
+    <span>✨</span> Open in Figma <span>↗</span>
   </button>
 </div>
 
 <div class="iframe-container">
   <div class="figma-embed-wrapper">
-    <!-- Figma embed code - updated to match the prototype node for best preview -->
     <iframe 
-      style="border: 1px solid rgba(0, 0, 0, 0.1);" 
-      width="800" 
-      height="450" 
-      src="https://www.figma.com/proto/K8c8JVpx1SK1Ge9XPZDuES/Untitled?node-id=6-16&t=ELGgbhEgDvDQwAs9-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A2" 
+      src="https://embed.figma.com/proto/K8c8JVpx1SK1Ge9XPZDuES/Untitled?node-id=66-2&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A2&embed-host=share"
+      title="Figma Project Prototype"
       allowfullscreen
-      title="Figma Project Prototype - live design preview">
+      sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms allow-modals"
+      allow="fullscreen; clipboard-read; clipboard-write">
     </iframe>
   </div>
-  <div class="info-note">
-    ⚡ Tap button → open full prototype
+  <div class="fallback-message">
+    ⚠️ If prototype doesn't load → <a href="https://www.figma.com/proto/K8c8JVpx1SK1Ge9XPZDuES/Untitled?node-id=66-2&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A2" target="_blank">Open directly in Figma</a>
   </div>
 </div>
 
 <script>
-  (function() {
-    // EXACT FIGMA PROTOTYPE URL to be opened when button is tapped/clicked.
-    // Using the precise link you provided:
-    const FIGMA_PROTOTYPE_URL = "https://www.figma.com/proto/K8c8JVpx1SK1Ge9XPZDuES/Untitled?node-id=66-2&t=VdvDhm4TzUBEr3ES-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A2";
-    
-    // Get the button element
-    const openButton = document.getElementById('openFigmaBtn');
-    
-    if (openButton) {
-      // Function to handle tap/click: opens the Figma prototype in a new browser tab
-      const launchFigmaProject = (event) => {
-        // prevent any accidental default or bubbling
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation?.();
-        }
-        // Open the Figma prototype URL securely with noopener/noreferrer for performance & security
-        window.open(FIGMA_PROTOTYPE_URL, '_blank', 'noopener,noreferrer');
-      };
-      
-      // Attach click event (works on all devices: mouse, touch, keyboard)
-      openButton.addEventListener('click', launchFigmaProject);
-      
-      // Provide subtle visual feedback for better UX
-      openButton.addEventListener('mousedown', () => {
-        openButton.style.transform = 'scale(0.97)';
-      });
-      openButton.addEventListener('mouseup', () => {
-        openButton.style.transform = '';
-      });
-      openButton.addEventListener('mouseleave', () => {
-        openButton.style.transform = '';
-      });
-      
-      // For touch devices: give same press feedback
-      openButton.addEventListener('touchstart', () => {
-        openButton.style.transform = 'scale(0.97)';
-      });
-      openButton.addEventListener('touchend', () => {
-        openButton.style.transform = '';
-      });
-      openButton.addEventListener('touchcancel', () => {
-        openButton.style.transform = '';
-      });
-      
-    } else {
-      console.warn("Button element #openFigmaBtn not found — check DOM ID.");
-    }
-    
-    // Ensure iframe loads properly
-    const iframeEl = document.querySelector('iframe');
-    if (iframeEl) {
-      iframeEl.addEventListener('load', () => {
-        console.log("✅ Figma prototype embed loaded successfully");
-      });
-    }
-    
-    console.log("🎨 Figma Project Viewer ready — button opens: " + FIGMA_PROTOTYPE_URL);
-  })();
+  document.getElementById('openFigmaBtn').addEventListener('click', function() {
+    window.open('https://www.figma.com/proto/K8c8JVpx1SK1Ge9XPZDuES/Untitled?node-id=66-2&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A2', '_blank');
+  });
 </script>
 </body>
 </html>
